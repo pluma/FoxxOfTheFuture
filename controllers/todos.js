@@ -82,7 +82,7 @@ itemRoutes.delete('/', (req, res) => {
 
 
 itemRoutes.put('/', (req, res) => {
-  const key = req.pathParams.key;
+  const key = req.pathParams.key; // pathParams cascade down nested routers
   Todos.replace(key, req.body);
   const todo = Todos.document(key);
   res.send(todo);
