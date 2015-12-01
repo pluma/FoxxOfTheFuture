@@ -60,7 +60,7 @@ routes.get('/', (req, res) => {
 );
 
 
-const itemRoutes = routes.all('/:key') // no fn means return new sub-router
+const itemRoutes = routes.child('/:key')
 .pathParam(
   'key',
   joi.string().required(),
