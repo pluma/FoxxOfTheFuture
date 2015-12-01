@@ -60,7 +60,9 @@ routes.get('/', (req, res) => {
 );
 
 
-const itemRoutes = routes.child('/:key')
+const itemRoutes = createRouter();
+
+routes.mount('/:key', itemRoutes)
 .pathParam(
   'key',
   joi.string().required(),
