@@ -4,6 +4,7 @@ const db = require('@arangodb/db');
 const context = require('@foxx/context'); // magic
 const createRouter = require('@foxx/router');
 const routes = createRouter();
+module.exports = routes;
 
 const Todos = db._collection(context.prefix('todos'));
 const TodoModel = {
