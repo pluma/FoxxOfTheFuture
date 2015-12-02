@@ -21,7 +21,7 @@ routes.post('/', (req, res) => {
   const todo = Todos.document(meta);
   res.status(201);
   res.send(todo);
-}, 'todos.list')
+})
 .description(
   'Save a todo'
 )
@@ -44,7 +44,7 @@ routes.get('/', (req, res) => {
   }
   else todos = Todos.all();
   res.send(todos);
-}, 'todos.detail')
+}, 'todos.list')
 .description(
   'List all todos'
 )
@@ -69,6 +69,17 @@ routes.mount('/:key', itemRoutes)
 );
 
 
+itemRoutes.get('/', (req, res) => {
+  const key = req.pathParams.key;
+  const todo = Todos.document(key);
+  res.send(todo);
+}, 'todos.detail')
+.response(
+  TodoModel,
+  'The todo item with the given key'
+);
+
+
 itemRoutes.delete('/', (req, res) => {
   const key = req.pathParams.key;
   Todos.remove(key);
@@ -85,7 +96,7 @@ itemRoutes.put('/', (req, res) => {
   Todos.replace(key, req.body);
   const todo = Todos.document(key);
   res.send(todo);
-}, 'todos.replace')
+})
 .description(
   'Replace the todo item'
 )
@@ -104,7 +115,7 @@ itemRoutes.put('/title', (req, res) => {
   Todos.update(key, {title: req.body});
   const todo = Todos.document(key);
   res.send(todo);
-}, 'todos.title.replace')
+})
 .description(
   'Replace the todo item title'
 )
@@ -123,7 +134,7 @@ itemRoutes.put('/completed', (req, res) => {
   Todos.update(key, {completed: req.body});
   const todo = Todos.document(key);
   res.send(todo);
-}, 'todos.completed.replace')
+})
 .description(
   'Replace the todo item status'
 )
