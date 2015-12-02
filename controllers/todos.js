@@ -38,11 +38,9 @@ routes.post('/', (req, res) => {
 routes.get('/', (req, res) => {
   let todos;
   if (typeof req.queryParams.completed === 'boolean') {
-    todos = db._query(aqlQuery`
-      FOR t IN ${Todos}
-      FILTER t.completed == ${res.queryParams.completed}
-      RETURN t
-    `).toArray();
+    todos = Todos.byExample({
+      completed: res.queryParams.completed
+    });
   }
   else todos = Todos.all();
   res.send(todos);
