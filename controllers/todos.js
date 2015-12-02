@@ -1,13 +1,14 @@
 const _ = require('lodash');
 const joi = require('joi');
 const db = require('@arangodb/db');
+const fs = require('@arangodb/fs');
 const context = require('@foxx/context'); // magic
 const createRouter = require('@foxx/router');
 const routes = createRouter();
 module.exports = routes;
 
 const Todos = db._collection(context.prefix('todos'));
-const TodoModel = {
+const TodoType = {
   schema: {
     title: joi.string().required(),
     completed: joi.boolean().default(false)
@@ -20,22 +21,22 @@ routes.post('/', (req, res) => {
   const meta = Todos.save(req.body);
   const todo = Todos.document(meta);
   res.status(201);
-  res.send(todo);
+  res.send(todo); // sets the response body
 })
-.description(
+.description( // no more magical comments
   'Save a todo'
 )
-.body(
-  TodoModel,
+.body( // for the request body:
+  TodoType, // TodoType.fromClient + schema is applied
   'Todo item to save'
 )
-.response(
-  TodoModel,
+.response( // for the response body:
+  TodoType, // TodoType.forClient is applied
   'Todo item that was saved'
 );
 
 
-routes.get('/', (req, res) => {
+routes.get((req, res) => { // path is optional for "/"
   let todos;
   if (typeof req.queryParams.completed === 'boolean') {
     todos = Todos.byExample({
@@ -50,11 +51,11 @@ routes.get('/', (req, res) => {
 )
 .queryParam(
   'completed',
-  TodoModel.schema.completed.allow(null).default(null),
+  TodoType.schema.completed.allow(null).default(null),
   'Filter by completed status'
 )
 .response(
-  [TodoModel],
+  [TodoType], // array of TodoType items
   'Filtered todo items'
 );
 
@@ -75,7 +76,7 @@ itemRoutes.get('/', (req, res) => {
   res.send(todo);
 }, 'todos.detail')
 .response(
-  TodoModel,
+  TodoType,
   'The todo item with the given key'
 );
 
@@ -101,11 +102,11 @@ itemRoutes.put('/', (req, res) => {
   'Replace the todo item'
 )
 .body(
-  TodoModel,
+  TodoType,
   'Todo info to replace the todo item with'
 )
 .response(
-  TodoModel,
+  TodoType,
   'Todo item that was updated'
 );
 
@@ -120,11 +121,11 @@ itemRoutes.put('/title', (req, res) => {
   'Replace the todo item title'
 )
 .body(
-  TodoModel.schema.title,
+  TodoType.schema.title,
   'New title of the todo item'
 )
 .response(
-  TodoModel,
+  TodoType,
   'Todo item that was updated'
 );
 
@@ -139,10 +140,33 @@ itemRoutes.put('/completed', (req, res) => {
   'Replace the todo item status'
 )
 .body(
-  TodoModel.schema.completed,
+  TodoType.schema.completed,
   'Whether the todo item was completed'
 )
 .response(
-  TodoModel,
+  TodoType,
   'Todo item that was updated'
+);
+
+
+// Express-style middleware (but non-async)
+itemRoutes.use('/legacy/detail', (req, res, next) => {
+  const key = req.pathParams.key;
+  req.rewrite('todos.detail', {key});
+  // Request will now be processed as if it was
+  // GET /todos/:key
+  next();
+  // Here we can do post-processing if necessary
+  // BTW: router.use does not generate Swagger docs
+});
+
+
+routes.get('/favicon.ico', (req, res) => {
+  const buf = fs.readFileSync(context.filename('app.ico'));
+  res.set('content-type', 'image/x-icon');
+  res.send(buf); // buffers are not converted to JSON (duh)
+})
+.response(
+  'image/x-icon', // string value implies MIME type (docs only)
+  'Bookmark icon for the todo service'
 );
