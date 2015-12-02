@@ -1,6 +1,7 @@
 const context = require('@foxx/context'); // magic
 const createRouter = require('@foxx/router');
 const routes = createRouter();
+module.exports = routes;
 
 routes.get('/:name', (req, res) => {
   res.send(`Hello ${req.pathParams.name}`);
