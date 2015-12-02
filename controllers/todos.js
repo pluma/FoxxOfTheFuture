@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const Dict = require('core-js/library/fn/dict');
+const joi = require('joi');
 const db = require('@arangodb/db');
 const context = require('@foxx/context'); // magic
 const createRouter = require('@foxx/router');
