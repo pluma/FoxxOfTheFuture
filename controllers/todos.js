@@ -1,4 +1,4 @@
-const _ = require('lodash');
+const _ = require('lodash'); // let's replace underscore with lodash
 const joi = require('joi');
 const db = require('@arangodb/db');
 const fs = require('@arangodb/fs');
