@@ -24,7 +24,7 @@ routes.post('/', (req, res) => {
   res.status(201);
   res.send(todo); // sets the response body
 })
-.description( // no more magical comments
+.description( // maybe no more magical comments?
   'Save a todo'
 )
 .body( // for the request body:
