@@ -8,6 +8,7 @@ const routes = createRouter();
 module.exports = routes;
 
 const Todos = db._collection(context.prefixed('todos'));
+// Or simply: context.prefixedCollection('todos') ?
 const TodoType = {
   schema: {
     title: joi.string().required(),
