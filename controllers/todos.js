@@ -170,3 +170,14 @@ routes.get('/favicon.ico', (req, res) => {
   'image/x-icon', // string value implies MIME type (docs only)
   'Bookmark icon for the todo service'
 );
+
+routes.get('/humans.txt', (req, res) => {
+  res.set('content-type', 'text/plain');
+  res.write('Author: Omar Khayyam Ravenhurst\n'); // write does not convert to JSON
+  res.write('Design: Malaclypse the Younger\n'); // it can be invoked multiple times
+  res.write('The Goddess Prevails.'); // the result is simply concatenated
+})
+.response(
+  'text/plain',
+  'The human beings that created this service'
+);
