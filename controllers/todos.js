@@ -7,7 +7,7 @@ const createRouter = require('@foxx/router');
 const routes = createRouter();
 module.exports = routes;
 
-const Todos = db._collection(context.prefix('todos'));
+const Todos = db._collection(context.prefixed('todos'));
 const TodoType = {
   schema: {
     title: joi.string().required(),
