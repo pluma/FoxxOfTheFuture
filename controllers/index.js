@@ -14,5 +14,5 @@ context.use(sessionsMiddleware({
   expiry: 60 // minutes
 }));
 
-context.mount('/todos', todosRouter);
-context.mount('/', helloWorldRouter);
+context.use('/todos', todosRouter);
+context.use('/', helloWorldRouter);
