@@ -1,4 +1,3 @@
-const context = require('@arangodb/foxx/context'); // magic
 const createRouter = require('@arangodb/foxx/router');
 const routes = createRouter();
 module.exports = routes;
@@ -14,7 +13,7 @@ routes.get('/:name', (req, res) => {
  * Redirect to Hello World route
  */
 routes.get('/', (req, res) => {
-  const helloWorldUrl = context.route('hello', {name: 'World'});
-  // context.route can look up any mounted route by name and params
+  const helloWorldUrl = req.reverse('hello', {name: 'World'});
+  // req.reverse can look up any mounted route by name and params
   res.redirect(helloWorldUrl);
 });
