@@ -1,14 +1,13 @@
 const _ = require('lodash'); // let's replace underscore with lodash
 const joi = require('joi');
-const db = require('@arangodb/db');
-const fs = require('@arangodb/fs');
-const context = require('@arangodb/foxx/context'); // magic
+const db = require('@arangodb').db;
+const fs = require('fs');
+const context = module.context;
 const createRouter = require('@arangodb/foxx/router');
 const routes = createRouter();
 module.exports = routes;
 
-const Todos = db._collection(context.prefixed('todos'));
-// Or simply: context.prefixedCollection('todos') ?
+const Todos = context.collection('todos');
 const TodoType = {
   schema: {
     title: joi.string().required(),
@@ -32,6 +31,7 @@ routes.post('/', (req, res) => {
   'Todo item to save'
 )
 .response( // for the response body:
+  200, // When status is 200
   TodoType, // TodoType.forClient is applied
   'Todo item that was saved'
 );
@@ -56,6 +56,7 @@ routes.get((req, res) => { // path is optional for "/"
   'Filter by completed status'
 )
 .response(
+  // status code 200 is implied by default
   [TodoType], // array of TodoType items
   'Filtered todo items'
 );
@@ -90,7 +91,7 @@ itemRoutes.delete('/', (req, res) => {
 .description(
   'Remove the todo item'
 )
-.response(null); // Explicitly enforce no response
+.response(null); // Explicitly enforce no response, implies 204 instead of 200
 
 
 itemRoutes.put('/', (req, res) => {
