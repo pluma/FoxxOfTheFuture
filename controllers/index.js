@@ -1,4 +1,4 @@
-const context = require('@arangodb/foxx/context'); // magic
+const context = module.context;
 const sessionsMiddleware = require('@arangodb/foxx/sessions'); // replaces activateSessions
 const headerTransport = require('@arangodb/foxx/sessions/transports/header');
 const cookieTransport = require('@arangodb/foxx/sessions/transports/cookie');
