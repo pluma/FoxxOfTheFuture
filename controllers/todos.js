@@ -154,7 +154,7 @@ itemRoutes.put('/completed', (req, res) => {
 // Express-style middleware (but non-async)
 itemRoutes.use('/legacy/detail', (req, res, next) => {
   const key = req.pathParams.key;
-  req.rewrite('todos.detail', {key});
+  req.rewrite('todos.detail', {key}); // TODO TBD
   // Request will now be processed as if it was
   // GET /todos/:key
   next();
@@ -164,12 +164,11 @@ itemRoutes.use('/legacy/detail', (req, res, next) => {
 
 
 routes.get('/favicon.ico', (req, res) => {
-  const buf = fs.readFileSync(context.filename('app.ico'));
   res.set('content-type', 'image/x-icon');
-  res.send(buf); // buffers are not converted to JSON (duh)
+  res.sendFile(context.filename('app.ico'));
 })
 .response(
-  'image/x-icon', // string value implies MIME type (docs only)
+  ['image/x-icon'], // string array -> MIME type
   'Bookmark icon for the todo service'
 );
 
