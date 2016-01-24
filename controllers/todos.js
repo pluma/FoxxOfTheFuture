@@ -31,7 +31,7 @@ routes.post('/', (req, res) => {
   'Todo item to save'
 )
 .response( // for the response body:
-  200, // When status is 200
+  201, // When status is 200
   TodoType, // TodoType.forClient is applied
   'Todo item that was saved'
 );
