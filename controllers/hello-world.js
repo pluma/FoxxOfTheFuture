@@ -13,7 +13,7 @@ routes.get('/:name', (req, res) => {
  * Redirect to Hello World route
  */
 routes.get('/', (req, res) => {
-  const helloWorldUrl = req.reverse('hello', {name: 'World'});
+  const helloWorldUrl = req.context.reverse('hello', {name: 'World'});
   // req.reverse can look up any mounted route by name and params
   res.redirect(helloWorldUrl);
 });
